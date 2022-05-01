@@ -1,6 +1,8 @@
 package com.company;
 
+import com.company.Client.CommandChecker;
 import com.company.Commands.*;
+import com.company.Requests.FlatRequest;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -68,7 +70,13 @@ public class Main {
                 System.exit(0);
             }
             String command = sc.nextLine();
-            sender(command);
+            String n[] = command.split(" ");
+            try {
+                sender(n[0], Integer.parseInt(n[1]));
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                sender(n[0], 0);
+            }
 
         }
     }
@@ -81,79 +89,82 @@ public class Main {
 //                client.write(buffer);
 //            }
     //write
-    static public void sender(String command) {
+    static public void sender(String command, int id) {
+
+        try {
 
             try {
-                ClearCommand clearCommand = new ClearCommand();
-                HelpCommand helpCommand = new HelpCommand();
-                ShowCommand showCommand = new ShowCommand();
-                ReorderCommand reorderCommand = new ReorderCommand();
-                AverageOfNumberOfRooms average = new AverageOfNumberOfRooms();
-                MaxByFurnitureCommand maxByFurnitureCommand = new MaxByFurnitureCommand();
-                AddCommand addCommand = new AddCommand();
-                InfoCommand infoCommand = new InfoCommand();
-                try {
-                    SocketChannel client = SocketChannel.open(new InetSocketAddress("127.0.0.1", 3245));
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-                    {
-                        if (command.equals("show")) {
-                            objectOutputStream.writeObject(showCommand);
-                        } else if (command.equals("reorder")) {
-                            objectOutputStream.writeObject(reorderCommand);
-                        } else if (command.equals("add")) {
-                            objectOutputStream.writeObject(addCommand.check());
-                        } else if (command.equals("clear")) {
-                            objectOutputStream.writeObject(clearCommand);
-                        } else if (command.equals("average_of_number_of_rooms")) {
-                            objectOutputStream.writeObject(average);
-                        } else if (command.equals("max_by_furniture")) {
-                            objectOutputStream.writeObject(maxByFurnitureCommand);
-                        } else if (command.equals("info")) {
-                            objectOutputStream.writeObject(infoCommand);
-                        } else if (command.equals("help")) {
-                            objectOutputStream.writeObject(helpCommand);
-                        } else {
-                            System.out.println("Неизветсная комманда");
+                SocketChannel client = SocketChannel.open(new InetSocketAddress("127.0.0.1", 4009));
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+                CommandChecker commandChecker = new CommandChecker(command, objectOutputStream, id);
+                objectOutputStream = commandChecker.checker();
+                {
+//                        switch (command.trim()){
+//                            case "show":
+//                                objectOutputStream.writeObject(showCommand);
+//                                break;
+//                            case "reorder":
+//                                objectOutputStream.writeObject(reorderCommand);
+//                                break;
+//                            case "add":
+//                                objectOutputStream.writeObject(addCommand = new AddCommand(FlatRequest.request()));
+//                                break;
+//                            case "clear":
+//                                objectOutputStream.writeObject(clearCommand);
+//                                break;
+//                            case "average_of_number_of_rooms":
+//                                objectOutputStream.writeObject(average);
+//                                break;
+//                            case "max_by_furniture":
+//                                objectOutputStream.writeObject(maxByFurnitureCommand);
+//                                break;
+//                            case "info":
+//                                objectOutputStream.writeObject(infoCommand);
+//                                break;
+//                            case "help":
+//                                objectOutputStream.writeObject(helpCommand);
+//                                break;
+//                            default:
+//                                System.out.println("Unknown command");
+//                                break;
+//                        }
+//
+//                        objectOutputStream.flush();
+                    byte[] bytes = byteArrayOutputStream.toByteArray();
+                    byteArrayOutputStream.flush();
+                    ByteBuffer bufferWrite = ByteBuffer.allocate(1024);
+                    bufferWrite.put(bytes);
+                    System.out.println(bufferWrite);
+                    bufferWrite.flip();
+                    client.write(bufferWrite);
+
+                    ByteBuffer Reader = ByteBuffer.allocate(30000);
+                    client.read(Reader);
+                    String s = "";
+                    Reader.flip();
+                    try {
+                        while (true) {
+                            s = s + (char) Reader.get();
                         }
-
-                        objectOutputStream.flush();
-
-                        byte[] bytes = byteArrayOutputStream.toByteArray();
-                        byteArrayOutputStream.flush();
-                        ByteBuffer bufferWrite = ByteBuffer.allocate(1024);
-                        bufferWrite.put(bytes);
-                        System.out.println(bufferWrite);
-                        bufferWrite.flip();
-                        client.write(bufferWrite);
-
-                        ByteBuffer Reader = ByteBuffer.allocate(30000);
-                        client.read(Reader);
-                        String s = "";
-                        Reader.flip();
-                        try {
-                            while (true) {
-                                s = s + (char) Reader.get();
-                            }
-                        } catch (BufferUnderflowException e) {
-                            System.out.print("");
-                        }
-                        System.out.println(s);
+                    } catch (BufferUnderflowException e) {
+                        System.out.print("");
+                    }
+                    System.out.println(s);
 //                    while (client.read(Reader) > 0) {
 //                        System.out.printf("%s\n", new String(Reader.array(), StandardCharsets.UTF_8));
 //                    }
 
-                        client.close();
-                    }
+                    client.close();
                 }
-                catch (ConnectException e){
-                    System.out.println("Сервер не отвечает");
-                }
+            } catch (ConnectException e) {
+                System.out.println("Сервер не отвечает");
+            }
 //        } catch (ClassNotFoundException e) {
 //            e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        catch (ConnectException e) {
 //            e.printStackTrace();
 //        }
