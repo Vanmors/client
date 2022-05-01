@@ -2,6 +2,7 @@ package com.company.Client;
 
 import com.company.Commands.*;
 import com.company.Requests.FlatRequest;
+import com.company.Requests.HouseRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,6 +62,14 @@ public class CommandChecker {
                     break;
                 case "update":
                     objectOutputStream.writeObject(new UpdateIdCommand(FlatRequest.request(), id));
+                    break;
+                case "add_if_min":
+                    objectOutputStream.writeObject(new AddIfMinCommand(FlatRequest.request(), id));
+                    break;
+                case "remove_all_by_house":
+                    objectOutputStream.writeObject(new RemoveAllByHouseCommand(HouseRequest.request()));
+                case "remove_lower":
+                    objectOutputStream.writeObject(new RemoveLowerCommand(id));
                 default:
                     System.out.println("Unknown command");
                     break;
