@@ -1,8 +1,6 @@
 package com.company;
 
 import com.company.Client.CommandChecker;
-import com.company.Commands.*;
-import com.company.Requests.FlatRequest;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -11,7 +9,6 @@ import java.net.Socket;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Main {
@@ -70,16 +67,16 @@ public class Main {
                 System.exit(0);
             }
             String command = sc.nextLine();
-            String n[] = command.split(" ");
+            String[] n = command.split(" ");
             try {
-                sender(n[0], Integer.parseInt(n[1]));
+                sender(n[0], n[1]);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                sender(n[0], "0");
             }
-            catch (ArrayIndexOutOfBoundsException e){
-                sender(n[0], 0);
-            }
-
         }
+
     }
+
 
     // write
 //            String request = "help";
@@ -89,7 +86,7 @@ public class Main {
 //                client.write(buffer);
 //            }
     //write
-    static public void sender(String command, int id) {
+    static public void sender(String command, String id) {
 
         try {
 
@@ -100,37 +97,7 @@ public class Main {
                 CommandChecker commandChecker = new CommandChecker(command, objectOutputStream, id);
                 objectOutputStream = commandChecker.checker();
                 {
-//                        switch (command.trim()){
-//                            case "show":
-//                                objectOutputStream.writeObject(showCommand);
-//                                break;
-//                            case "reorder":
-//                                objectOutputStream.writeObject(reorderCommand);
-//                                break;
-//                            case "add":
-//                                objectOutputStream.writeObject(addCommand = new AddCommand(FlatRequest.request()));
-//                                break;
-//                            case "clear":
-//                                objectOutputStream.writeObject(clearCommand);
-//                                break;
-//                            case "average_of_number_of_rooms":
-//                                objectOutputStream.writeObject(average);
-//                                break;
-//                            case "max_by_furniture":
-//                                objectOutputStream.writeObject(maxByFurnitureCommand);
-//                                break;
-//                            case "info":
-//                                objectOutputStream.writeObject(infoCommand);
-//                                break;
-//                            case "help":
-//                                objectOutputStream.writeObject(helpCommand);
-//                                break;
-//                            default:
-//                                System.out.println("Unknown command");
-//                                break;
-//                        }
-//
-//                        objectOutputStream.flush();
+
                     byte[] bytes = byteArrayOutputStream.toByteArray();
                     byteArrayOutputStream.flush();
                     ByteBuffer bufferWrite = ByteBuffer.allocate(1024);
@@ -151,7 +118,10 @@ public class Main {
                         System.out.print("");
                     }
                     System.out.println(s);
-//                    while (client.read(Reader) > 0) {
+                    if (command.equals("exit")) {
+                        System.exit(0);
+                    }
+                    //                    while (client.read(Reader) > 0) {
 //                        System.out.printf("%s\n", new String(Reader.array(), StandardCharsets.UTF_8));
 //                    }
 
@@ -160,13 +130,8 @@ public class Main {
             } catch (ConnectException e) {
                 System.out.println("Сервер не отвечает");
             }
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        catch (ConnectException e) {
-//            e.printStackTrace();
-//        }
     }
 }

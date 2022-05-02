@@ -4,12 +4,11 @@ import com.company.Commands.*;
 import com.company.Requests.FlatRequest;
 import com.company.Requests.HouseRequest;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-public class CommandChecker {
+public class CommandCheckerScr {
     private String command;
     private int id;
     private String scriptFile;
@@ -24,16 +23,14 @@ public class CommandChecker {
     private ObjectOutputStream objectOutputStream;
 
 
-    public CommandChecker(String command, ObjectOutputStream objectOutputStream, String id) throws IOException {
+    public CommandCheckerScr(String command, ObjectOutputStream objectOutputStream, String id) throws IOException {
         this.command = command;
         this.objectOutputStream = objectOutputStream;
         try {
             this.id = Integer.parseInt(id);
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             this.scriptFile = id;
         }
-
     }
 
     public ObjectOutputStream checker() throws IOException {
@@ -83,11 +80,10 @@ public class CommandChecker {
                     break;
                 case "execute_script":
                     try {
-//                        ExecuteScriptCommand executeScriptCommand = new ExecuteScriptCommand(scriptFile);
-//                        executeScriptCommand.executeScript();
-                        objectOutputStream.writeObject(new ExecuteScriptCommand(scriptFile));
-                    }
-                    catch (FileNotFoundException e){
+                        ExecuteScriptCommand executeScriptCommand = new ExecuteScriptCommand(scriptFile);
+                        executeScriptCommand.executeScript();
+
+                    } catch (FileNotFoundException e) {
                         System.out.println("File not found");
                     }
                     break;
