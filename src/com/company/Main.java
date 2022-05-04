@@ -5,7 +5,6 @@ import com.company.Client.CommandChecker;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -13,55 +12,9 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static Socket clientSocket; //сокет для общения
-    private static BufferedReader reader; // нам нужен ридер читающий с консоли, иначе как
-    // мы узнаем что хочет сказать клиент?
-    private static BufferedReader in; // поток чтения из сокета
-    private static BufferedWriter out; // поток записи в сокет
-
-    public static void main(String[] args) throws IOException {
-//        try {
-//            try {
-//                // адрес - локальный хост, порт - 4004, такой же как у сервера
-//                clientSocket = new Socket("127.0.0.1", 3245); // этой строкой мы запрашиваем
-//                //  у сервера доступ на соединение
-//                reader = new BufferedReader(new InputStreamReader(System.in));
-//                // читать соообщения с сервера
-////                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-////                // писать туда же
-////                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-//
-//                System.out.println("Введите команду:");
-//                // если соединение произошло и потоки успешно созданы - мы можем
-//                //  работать дальше и предложить клиенту что то ввести
-//                // если нет - вылетит исключение
-//                String word = reader.readLine(); // ждём пока клиент что-нибудь
-//                // не напишет в консоль
-//                out.write(word + "\n"); // отправляем сообщение на сервер
-//                out.flush();
-////                in.read();
-//                ByteBuffer buffer = ByteBuffer.allocate(1024);
-////                buffer = ByteBuffer.allocateDirect(in.read());
-//                int bytesread = in.read();
-//                System.out.println(bytesread);
-//                //String serverWord = in.readLine(); // ждём, что скажет сервер
-//                //String request = (String) new ObjectInputStream(new ByteArrayInputStream(buffer.array())).readObject();
-//                //System.out.println(request);
-//                //System.out.println(p); // получив - выводим на экран
-////            } catch (ClassNotFoundException e) {
-////                e.printStackTrace();
-//            } finally { // в любом случае необходимо закрыть сокет и потоки
-//            System.out.println("Клиент был закрыт...");
-//            clientSocket.close();
-//            in.close();
-//            out.close();
-//        }
-//        } catch (IOException e) {
-//            System.err.println(e);
-//        }
+    public static void main(String[] args) {
 
         while (true) {
-
             Scanner sc = new Scanner(System.in);
             if (!sc.hasNext()) {
                 System.exit(0);
@@ -77,15 +30,6 @@ public class Main {
 
     }
 
-
-    // write
-//            String request = "help";
-//            byte[] bs = request.getBytes(StandardCharsets.UTF_8);
-//            ByteBuffer buffer = ByteBuffer.wrap(bs);
-//            while (buffer.hasRemaining()) {
-//                client.write(buffer);
-//            }
-    //write
     static public void sender(String command, String id) {
 
         try {
@@ -102,7 +46,7 @@ public class Main {
                     byteArrayOutputStream.flush();
                     ByteBuffer bufferWrite = ByteBuffer.allocate(1024);
                     bufferWrite.put(bytes);
-                    System.out.println(bufferWrite);
+                    //System.out.println(bufferWrite);
                     bufferWrite.flip();
                     client.write(bufferWrite);
 
@@ -121,10 +65,6 @@ public class Main {
                     if (command.equals("exit")) {
                         System.exit(0);
                     }
-                    //                    while (client.read(Reader) > 0) {
-//                        System.out.printf("%s\n", new String(Reader.array(), StandardCharsets.UTF_8));
-//                    }
-
                     client.close();
                 }
             } catch (ConnectException e) {
