@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -35,38 +36,39 @@ public class Main {
         try {
 
             try {
+                byte[] bytesUC = {-84,-19,0,5};
                 SocketChannel client = SocketChannel.open(new InetSocketAddress("127.0.0.1", 4009));
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
                 CommandChecker commandChecker = new CommandChecker(command, objectOutputStream, id);
                 objectOutputStream = commandChecker.checker();
-                {
 
                     byte[] bytes = byteArrayOutputStream.toByteArray();
-                    byteArrayOutputStream.flush();
-                    ByteBuffer bufferWrite = ByteBuffer.allocate(1024);
-                    bufferWrite.put(bytes);
-                    //System.out.println(bufferWrite);
-                    bufferWrite.flip();
-                    client.write(bufferWrite);
+                    if (!Arrays.equals(bytesUC,bytes)) {
+                        byteArrayOutputStream.flush();
+                        ByteBuffer bufferWrite = ByteBuffer.allocate(1024);
+                        bufferWrite.put(bytes);
+                        //System.out.println(bufferWrite);
+                        bufferWrite.flip();
+                        client.write(bufferWrite);
 
-                    ByteBuffer Reader = ByteBuffer.allocate(30000);
-                    client.read(Reader);
-                    String s = "";
-                    Reader.flip();
-                    try {
-                        while (true) {
-                            s = s + (char) Reader.get();
+                        ByteBuffer Reader = ByteBuffer.allocate(30000);
+                        client.read(Reader);
+                        String s = "";
+                        Reader.flip();
+                        try {
+                            while (true) {
+                                s = s + (char) Reader.get();
+                            }
+                        } catch (BufferUnderflowException e) {
+                            System.out.print("");
                         }
-                    } catch (BufferUnderflowException e) {
-                        System.out.print("");
-                    }
-                    System.out.println(s);
-                    if (command.equals("exit")) {
-                        System.exit(0);
+                        System.out.println(s);
+                        if (command.equals("exit")) {
+                            System.exit(0);
+                        }
                     }
                     client.close();
-                }
             } catch (ConnectException e) {
                 System.out.println("Сервер не отвечает");
             }
