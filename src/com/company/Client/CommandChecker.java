@@ -13,14 +13,6 @@ public class CommandChecker {
     private String command;
     private int id;
     private String scriptFile;
-    private ClearCommand clearCommand = new ClearCommand();
-    private HelpCommand helpCommand = new HelpCommand();
-    private ShowCommand showCommand = new ShowCommand();
-    private ReorderCommand reorderCommand = new ReorderCommand();
-    private AverageOfNumberOfRooms average = new AverageOfNumberOfRooms();
-    private MaxByFurnitureCommand maxByFurnitureCommand = new MaxByFurnitureCommand();
-    private AddCommand addCommand;
-    private InfoCommand infoCommand = new InfoCommand();
     private ObjectOutputStream objectOutputStream;
 
 
@@ -41,28 +33,28 @@ public class CommandChecker {
         {
             switch (command.trim()) {
                 case "show":
-                    objectOutputStream.writeObject(showCommand);
+                    objectOutputStream.writeObject(new ShowCommand());
                     break;
                 case "reorder":
-                    objectOutputStream.writeObject(reorderCommand);
+                    objectOutputStream.writeObject(new ReorderCommand());
                     break;
                 case "add":
-                    objectOutputStream.writeObject(addCommand = new AddCommand(FlatRequest.request()));
+                    objectOutputStream.writeObject(new AddCommand(FlatRequest.request()));
                     break;
                 case "clear":
-                    objectOutputStream.writeObject(clearCommand);
+                    objectOutputStream.writeObject(new ClearCommand());
                     break;
                 case "average_of_number_of_rooms":
-                    objectOutputStream.writeObject(average);
+                    objectOutputStream.writeObject(new AverageOfNumberOfRooms());
                     break;
                 case "max_by_furniture":
-                    objectOutputStream.writeObject(maxByFurnitureCommand);
+                    objectOutputStream.writeObject(new MaxByFurnitureCommand());
                     break;
                 case "info":
-                    objectOutputStream.writeObject(infoCommand);
+                    objectOutputStream.writeObject(new InfoCommand());
                     break;
                 case "help":
-                    objectOutputStream.writeObject(helpCommand);
+                    objectOutputStream.writeObject(new HelpCommand());
                     break;
                 case "remove_by_id":
                     objectOutputStream.writeObject(new RemoveByIdCommand(id));
@@ -74,7 +66,7 @@ public class CommandChecker {
                     objectOutputStream.writeObject(new AddIfMinCommand(FlatRequest.request(), id));
                     break;
                 case "remove_all_by_house":
-                    objectOutputStream.writeObject(new RemoveAllByHouseCommand(HouseRequest.request()));
+                    objectOutputStream.writeObject(new RemoveAllByHouseCommand(HouseRequest.request(), id));
                 case "remove_lower":
                     objectOutputStream.writeObject(new RemoveLowerCommand(id));
                     break;
