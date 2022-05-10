@@ -21,7 +21,19 @@ public class Main {
         LogConnect logConnect = new LogConnect();
         SocketChannel client = logConnect.connect();
             logConnect.log(client);
-
+            ByteBuffer buffer = ByteBuffer.allocate(30000);
+            client.read(buffer);
+        String s = "";
+        buffer.flip();
+        try {
+            while (true) {
+                s = s + (char) buffer.get();
+            }
+        } catch (BufferUnderflowException e) {
+            System.out.print("");
+        }
+        System.out.println(s);
+        client.close();
         while (true) {
 
             Scanner sc = new Scanner(System.in);
