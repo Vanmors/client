@@ -13,27 +13,32 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-
-
-
+    
     public static void main(String[] args) throws IOException {
+        String user = null;
         Main m = new Main();
-        LogConnect logConnect = new LogConnect();
-        SocketChannel client = logConnect.connect();
-            logConnect.log(client);
+        try {
+            LogConnect logConnect = new LogConnect();
+            SocketChannel client = logConnect.connect();
+            user = logConnect.log(client);
+            System.out.println(user);
             ByteBuffer buffer = ByteBuffer.allocate(30000);
             client.read(buffer);
-        String s = "";
-        buffer.flip();
-        try {
-            while (true) {
-                s = s + (char) buffer.get();
+            String s = "";
+            buffer.flip();
+            try {
+                while (true) {
+                    s = s + (char) buffer.get();
+                }
+            } catch (BufferUnderflowException e) {
+                System.out.print("");
             }
-        } catch (BufferUnderflowException e) {
-            System.out.print("");
+            System.out.println(s);
+            client.close();
         }
-        System.out.println(s);
-        client.close();
+        catch (Exception e){
+            System.out.println("Сервер не отвечает");
+        }
         while (true) {
 
             Scanner sc = new Scanner(System.in);
@@ -44,15 +49,15 @@ public class Main {
             String[] n = command.split(" ");
 
             try {
-                m.sender(n[0], n[1]);
+                m.sender(n[0], n[1], user);
             } catch (ArrayIndexOutOfBoundsException e) {
-                m.sender(n[0], "0");
+                m.sender(n[0], "0", user);
             }
         }
 
     }
 
-    public void sender(String command, String id) {
+    public void sender(String command, String id, String user) {
 
         try {
             try {
@@ -62,7 +67,7 @@ public class Main {
                 SocketChannel client = logConnect.connect();
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-                CommandChecker commandChecker = new CommandChecker(command, objectOutputStream, id);
+                CommandChecker commandChecker = new CommandChecker(command, objectOutputStream, user, id);
                 objectOutputStream = commandChecker.checker();
 
                 byte[] bytes = byteArrayOutputStream.toByteArray();

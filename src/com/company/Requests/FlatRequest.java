@@ -13,10 +13,10 @@ import java.util.Scanner;
 
 public class FlatRequest {
 
-    static public Flat request() throws IOException {
+    static public Flat request(String user) throws IOException {
         Flat f = new Flat(1, setName(), setCoordinates(), setCreationDate(),
                 setArea(), setNumberOfRooms(), setFurniture(), setTimeToMetroOnFoot(),
-                setView(), setHouse());
+                setView(), setHouse(), user);
         return f;
 }
 

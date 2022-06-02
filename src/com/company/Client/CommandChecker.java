@@ -3,6 +3,8 @@ package com.company.Client;
 import com.company.Commands.*;
 import com.company.Requests.FlatRequest;
 import com.company.Requests.HouseRequest;
+import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
+import sun.print.PSPrinterJob;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -14,11 +16,12 @@ public class CommandChecker {
     private int id;
     private String scriptFile;
     private ObjectOutputStream objectOutputStream;
+    private String user;
 
-
-    public CommandChecker(String command, ObjectOutputStream objectOutputStream, String id) throws IOException {
+    public CommandChecker(String command, ObjectOutputStream objectOutputStream, String user, String id) throws IOException {
         this.command = command;
         this.objectOutputStream = objectOutputStream;
+        this.user = user;
         try {
             this.id = Integer.parseInt(id);
         }
@@ -39,7 +42,7 @@ public class CommandChecker {
                     objectOutputStream.writeObject(new ReorderCommand());
                     break;
                 case "add":
-                    objectOutputStream.writeObject(new AddCommand(FlatRequest.request()));
+                    objectOutputStream.writeObject(new AddCommand(FlatRequest.request(user)));
                     break;
                 case "clear":
                     objectOutputStream.writeObject(new ClearCommand());
@@ -60,10 +63,10 @@ public class CommandChecker {
                     objectOutputStream.writeObject(new RemoveByIdCommand(id));
                     break;
                 case "update":
-                    objectOutputStream.writeObject(new UpdateIdCommand(FlatRequest.request(), id));
+                    objectOutputStream.writeObject(new UpdateIdCommand(FlatRequest.request(user), id));
                     break;
                 case "add_if_min":
-                    objectOutputStream.writeObject(new AddIfMinCommand(FlatRequest.request(), id));
+                    objectOutputStream.writeObject(new AddIfMinCommand(FlatRequest.request(user), id));
                     break;
                 case "remove_all_by_house":
                     objectOutputStream.writeObject(new RemoveAllByHouseCommand(HouseRequest.request(), id));
@@ -71,13 +74,13 @@ public class CommandChecker {
                     objectOutputStream.writeObject(new RemoveLowerCommand(id));
                     break;
                 case "exit":
-                    objectOutputStream.writeObject(new SaveCommand());
+                    System.exit(0);
                     break;
                 case "execute_script":
                     try {
 //                        ExecuteScriptCommand executeScriptCommand = new ExecuteScriptCommand(scriptFile);
 //                        executeScriptCommand.executeScript();
-                        objectOutputStream.writeObject(new ExecuteScriptCommand(scriptFile));
+                        objectOutputStream.writeObject(new ExecuteScriptCommand(scriptFile, user));
                     }
                     catch (FileNotFoundException e){
                         System.out.println("File not found");
