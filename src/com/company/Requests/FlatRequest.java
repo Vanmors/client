@@ -7,12 +7,12 @@ import com.company.data.House;
 import com.company.data.View;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.ZonedDateTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class FlatRequest {
-
     static public Flat request(String user) throws IOException {
         Flat f = new Flat(1, setName(), setCoordinates(), setCreationDate(),
                 setArea(), setNumberOfRooms(), setFurniture(), setTimeToMetroOnFoot(),
