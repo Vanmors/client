@@ -17,27 +17,29 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String user = null;
         Main m = new Main();
-        try {
-            LogConnect logConnect = new LogConnect();
-            SocketChannel client = logConnect.connect();
-            user = logConnect.log(client);
-            System.out.println(user);
-            ByteBuffer buffer = ByteBuffer.allocate(30000);
-            client.read(buffer);
-            String s = "";
-            buffer.flip();
+        String s = "";
+        while (!s.equals("Entered")) {
+            s = "";
             try {
-                while (true) {
-                    s = s + (char) buffer.get();
+                LogConnect logConnect = new LogConnect();
+                SocketChannel client = logConnect.connect();
+                user = logConnect.log(client);
+                System.out.println(user);
+                ByteBuffer buffer = ByteBuffer.allocate(30000);
+                client.read(buffer);
+                buffer.flip();
+                try {
+                    while (true) {
+                        s = s + (char) buffer.get();
+                    }
+                } catch (BufferUnderflowException e) {
+                    System.out.print("");
                 }
-            } catch (BufferUnderflowException e) {
-                System.out.print("");
+                System.out.println(s);
+                client.close();
+            } catch (Exception e) {
+                System.out.println("Сервер не отвечает");
             }
-            System.out.println(s);
-            client.close();
-        }
-        catch (Exception e){
-            System.out.println("Сервер не отвечает");
         }
         while (true) {
 
