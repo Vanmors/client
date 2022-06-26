@@ -3,8 +3,6 @@ package com.company.Client;
 import com.company.Commands.*;
 import com.company.Requests.FlatRequest;
 import com.company.Requests.HouseRequest;
-import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
-import sun.print.PSPrinterJob;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -62,7 +60,7 @@ public class CommandChecker {
                 case "remove_by_id":
                     objectOutputStream.writeObject(new RemoveByIdCommand(id, user));
                     break;
-                case "update":
+                case "update_id":
                     objectOutputStream.writeObject(new UpdateIdCommand(FlatRequest.request(user), id, user));
                     break;
                 case "add_if_min":
@@ -78,8 +76,6 @@ public class CommandChecker {
                     break;
                 case "execute_script":
                     try {
-//                        ExecuteScriptCommand executeScriptCommand = new ExecuteScriptCommand(scriptFile);
-//                        executeScriptCommand.executeScript();
                         objectOutputStream.writeObject(new ExecuteScriptCommand(scriptFile, user));
                     }
                     catch (FileNotFoundException e){
