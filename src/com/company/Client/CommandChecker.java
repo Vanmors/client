@@ -4,7 +4,6 @@ import com.company.Commands.*;
 import com.company.Requests.FlatRequest;
 import com.company.Requests.HouseRequest;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;

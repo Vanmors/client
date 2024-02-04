@@ -5,7 +5,6 @@ import com.company.Client.LogConnect;
 
 import java.io.*;
 import java.net.ConnectException;
-import java.net.InetSocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -77,7 +76,6 @@ public class Main {
                     byteArrayOutputStream.flush();
                     ByteBuffer bufferWrite = ByteBuffer.allocate(1024);
                     bufferWrite.put(bytes);
-                    //System.out.println(bufferWrite);
                     bufferWrite.flip();
                     client.write(bufferWrite);
 

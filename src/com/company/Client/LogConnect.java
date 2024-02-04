@@ -8,13 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class LogConnect {
-//    private SocketChannel client;
-//    private String user;
 
-//    public LogConnect(SocketChannel client, String user){
-//        this.client = client;
-//        this.user = user;
-//    }
     public SocketChannel connect() throws IOException {
         SocketChannel client = SocketChannel.open(new InetSocketAddress("127.0.0.1", 6123));
         return client;

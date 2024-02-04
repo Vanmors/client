@@ -1,13 +1,11 @@
 package com.company.Requests;
 
-import com.company.Commands.AddCommand;
 import com.company.data.Coordinates;
 import com.company.data.Flat;
 import com.company.data.House;
 import com.company.data.View;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.time.ZonedDateTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
